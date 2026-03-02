@@ -1,0 +1,549 @@
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.grid-layout {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.small-gap {
+    gap: 0.5rem;
+}
+
+.mt-3 {
+    margin-top: 0.75rem;
+}
+
+.mt-4 {
+    margin-top: 1rem;
+}
+
+.mt-6 {
+    margin-top: 1.5rem;
+}
+
+.mb-0 {
+    margin-bottom: 0;
+}
+
+.flex {
+    display: flex;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.gap-4 {
+    gap: 0.75rem;
+}
+
+.max-w-400 {
+    max-width: 400px;
+}
+
+.mr-2 {
+    margin-right: 0.5rem;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    border-left: 4px solid var(--primary-color);
+    padding-left: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--input-bg);
+    color: var(--text-color);
+}
+
+.sm-input {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+}
+
+/* Sync with CreateOrders Items Styles */
+.items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.item-card {
+    padding: 1.25rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.item-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr auto;
+    gap: 0.75rem;
+    align-items: stretch;
+}
+
+.amount-display {
+    height: 46px;
+    display: flex;
+    align-items: center;
+    padding: 0 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.item-actions {
+    padding-bottom: 5px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.item-actions .btn-icon {
+    margin-top: auto;
+    margin-bottom: 6px;
+}
+
+.invisible-label {
+    visibility: hidden;
+}
+
+.empty-items {
+    color: var(--text-muted);
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.text-muted {
+    color: var(--text-muted);
+}
+
+.form-section {
+    margin-bottom: 1.5rem;
+}
+
+.readonly-input {
+    background: rgba(0, 0, 0, 0.1);
+    cursor: not-allowed;
+    border-color: var(--border-color);
+}
+
+.items-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1rem;
+}
+
+.item-card {
+    position: relative;
+    padding: 1.25rem;
+    border-radius: 12px;
+    margin-bottom: 0;
+}
+
+.item-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.item-number {
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.item-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: rgba(var(--primary-rgb), 0.1);
+    border-radius: 8px;
+}
+
+.item-total label {
+    margin-bottom: 0;
+    font-weight: 600;
+}
+
+.amount-value {
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.totals-grid {
+    width: 100%;
+    max-width: 400px;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    gap: 1rem;
+}
+
+.total-row span {
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.total-row input {
+    width: 170px;
+    text-align: right;
+}
+
+.bank-details-summary {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--border-color);
+}
+
+.bank-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.total-row.highlight {
+    border-top: 2px solid var(--primary-color);
+    padding-top: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.total-row.highlight span {
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.total-row.highlight input {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--primary-color);
+}
+
+.sticky-bottom {
+    position: sticky;
+    bottom: 20px;
+    background: var(--dark-bg);
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.btn-icon:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.required-asterisk {
+    color: #ef4444;
+    margin-left: 2px;
+}
+
+@media (max-width: 768px) {
+    .bank-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .item-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+    }
+
+    .col-span-2 {
+        grid-column: span 2;
+    }
+
+    .item-actions {
+        grid-column: span 2;
+        margin-top: auto;
+        margin-bottom: 6px;
+    }
+
+    .invisible-label {
+        visibility: hidden;
+    }
+
+    .empty-items {
+        color: var(--text-muted);
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .w-full {
+        width: 100%;
+    }
+
+    .italic {
+        font-style: italic;
+    }
+
+    .text-muted {
+        color: var(--text-muted);
+    }
+
+    .form-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .readonly-input {
+        background: rgba(0, 0, 0, 0.1);
+        cursor: not-allowed;
+        border-color: var(--border-color);
+    }
+
+    .items-cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1rem;
+    }
+
+    .item-card {
+        position: relative;
+        padding: 1.25rem;
+        border-radius: 12px;
+        margin-bottom: 0;
+    }
+
+    .item-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .item-number {
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+
+    .item-total {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem;
+        background: rgba(var(--primary-rgb), 0.1);
+        border-radius: 8px;
+    }
+
+    .item-total label {
+        margin-bottom: 0;
+        font-weight: 600;
+    }
+
+    .amount-value {
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .totals-grid {
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        gap: 1rem;
+    }
+
+    .total-row span {
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .total-row input {
+        width: 170px;
+        text-align: right;
+    }
+
+    .bank-details-summary {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px dashed var(--border-color);
+    }
+
+    .bank-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    .total-row.highlight {
+        border-top: 2px solid var(--primary-color);
+        padding-top: 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .total-row.highlight span {
+        color: var(--primary-color);
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+
+    .total-row.highlight input {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--primary-color);
+    }
+
+    .sticky-bottom {
+        position: sticky;
+        bottom: 20px;
+        background: var(--dark-bg);
+        padding: 1rem;
+        border-radius: 12px;
+        box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+    }
+
+    .btn-icon {
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        transition: background 0.2s;
+    }
+
+    .btn-icon:hover {
+        background: rgba(0, 0, 0, 0.05);
+    }
+
+    .required-asterisk {
+        color: #ef4444;
+        margin-left: 2px;
+    }
+
+    @media (max-width: 768px) {
+        .bank-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .item-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .col-span-2 {
+            grid-column: span 2;
+        }
+
+        .item-actions {
+            grid-column: span 2;
+            display: flex;
+            justify-content: flex-end;
+            border-top: 1px solid var(--border-color);
+            padding-top: 0.5rem;
+        }
+    }
+}
+
+.custom-primary-heading {
+    color: var(--primary-color);
+}

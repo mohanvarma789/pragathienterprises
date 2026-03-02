@@ -1,0 +1,38 @@
+<div class="container fade-in">
+    <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
+
+        <!-- Shop Selection -->
+        <app-shop-selection *ngIf="!isItemsSaved" [parentForm]="orderForm" [villages]="(villages$ | async) || []"
+            [selectedVillage]="(selectedVillage$ | async) || ''"
+            [isVillageInactive]="(isVillageInactive$ | async) || false" [filteredShops]="(filteredShops$ | async) || []"
+            [selectedShop]="selectedShop" [openInvoices]="(openInvoices$ | async) || []"
+            (onVillageChange)="onVillageChange($event)" (onShopSelect)="onShopSelect()"
+            (onPriorityChange)="calculateTotals()" (onInvoiceSelect)="onInvoiceSelect($event)">
+        </app-shop-selection>
+
+        <!-- Items Section (Edit Mode) -->
+        <app-item-editor *ngIf="(selectedShop$ | async) && !isItemsSaved" [parentForm]="orderForm" [items]="items"
+            [displayedProducts]="displayedProducts" [productList]="productList"
+            [isOutOfStockPriority]="(priority$ | async)?.includes('Out of Stock') || false"
+            [searchTerm]="(productSearchTerm$ | async) || ''" [hasVisibleRows]="isAnyProductVisible()"
+            (onProductSelect)="onProductSelect($event)" (onQtyChange)="updateAmount($event)"
+            (onRemoveItem)="removeItem($event)" (onAddItem)="addItem()" (onSearchChange)="onSearchChange($event)">
+        </app-item-editor>
+
+        <!-- Totals & Summary section (Saved State/Summary Mode) -->
+        <app-order-summary *ngIf="isItemsSaved" [parentForm]="orderForm" [items]="items" [subTotal]="subTotal"
+            [cgst]="cgst" [sgst]="sgst" [totalAmount]="totalAmount" [isEditingGst]="isEditingGst"
+            [productList]="productList" (onEditItems)="toggleItemsSave()" (onToggleGst)="toggleGstEdit()"
+            (onGstChange)="calculateTotals()">
+        </app-order-summary>
+
+        <div *ngIf="selectedShop" class="items-actions mb-4 flex justify-center">
+            <button type="submit" class="btn btn-primary shadow-lg min-w-200" [disabled]="orderForm.invalid">
+                <span *ngIf="!isItemsSaved">Confirm Items</span>
+                <span *ngIf="isItemsSaved">
+                    {{ editingOrderId ? 'Update Order' : 'Submit Order' }}
+                </span>
+            </button>
+        </div>
+    </form>
+</div>

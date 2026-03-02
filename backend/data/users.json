@@ -1,0 +1,29 @@
+[
+    {
+        "id": "1",
+        "username": "admin",
+        "name": "Global Admin",
+        "email": "admin@pragathient.com",
+        "role": "Admin",
+        "active": true,
+        "password": "admin"
+    },
+    {
+        "id": "2",
+        "username": "manager",
+        "name": "Store Manager",
+        "email": "manager@pragathient.com",
+        "role": "Manager",
+        "active": true,
+        "password": "manager"
+    },
+    {
+        "id": "3",
+        "username": "staff",
+        "name": "Billing Staff",
+        "email": "staff@pragathient.com",
+        "role": "Staff",
+        "active": true,
+        "password": "staff"
+    }
+]

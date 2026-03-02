@@ -1,0 +1,229 @@
+.container {
+    padding: 2rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.form-card {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2.5rem;
+}
+
+.mb-4 {
+    margin-bottom: 0.65rem;
+}
+
+.mt-4 {
+    margin-top: 1.5rem;
+}
+
+h2 {
+    margin: 0;
+    font-size: 1.75rem;
+    color: var(--text-color);
+    text-align: center;
+}
+
+.actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn-secondary {
+    background: var(--glass-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    border: none;
+}
+
+.btn {
+    padding: 0.85rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-submit {
+    min-width: 150px;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.grid {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.grid-cols-2 {
+    grid-template-columns: 1fr 1fr;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    color: var(--text-color);
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+.disabled-input {
+    opacity: 0.7;
+    background: rgba(0, 0, 0, 0.1);
+    cursor: not-allowed;
+}
+
+/* Image Display Styles matching EditProduct */
+.image-display-container {
+    border: 2px dashed var(--border-color);
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.image-preview img {
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.no-image-placeholder {
+    padding: 2rem;
+    font-size: 1.5rem;
+    opacity: 0.5;
+}
+
+/* Highlight the Action Field */
+.highlight-section {
+    background: rgba(76, 175, 80, 0.1);
+    padding: 1rem;
+    border-radius: 10px;
+    border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.highlight-label {
+    color: var(--success-color);
+    font-weight: 600;
+}
+
+.highlight-input {
+    border-color: var(--success-color);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.header-section {
+    text-align: center;
+    margin-bottom: 1.25rem;
+}
+
+.loading-state,
+.error-state {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.spinner-inline {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(33, 150, 243, 0.1);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s infinite linear;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.error-state p {
+    font-size: 1.2rem;
+    color: var(--danger-color);
+}
+
+@media (max-width: 768px) {
+    h2 {
+        display: none;
+    }
+
+    .grid-cols-2 {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+
+    .form-card {
+        padding: 1.5rem;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .actions {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .actions .btn {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .image-preview img {
+        max-width: 80px;
+        max-height: 80px;
+    }
+
+    .header-section {
+        margin-bottom: 1rem;
+    }
+
+    .form-control {
+        padding: 0.6rem;
+        font-size: 0.95rem;
+    }
+
+    .current-stock-section {
+        background: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+    }
+}

@@ -1,0 +1,68 @@
+[
+    {
+        "id": "S001",
+        "name": "Sri Venkateswara Paints",
+        "address": "Near Bus Stand, Eluru Rd",
+        "village": "Bhimavaram",
+        "district": "West Godavari",
+        "pincode": "534202",
+        "mobile": "9848012345",
+        "gstin": "37AAAAA1234A1Z5",
+        "isActive": true
+    },
+    {
+        "id": "S002",
+        "name": "Durga Color World",
+        "address": "Main Road",
+        "village": "Tanuku",
+        "district": "West Godavari",
+        "pincode": "534211",
+        "mobile": "9848054321",
+        "gstin": "37BBBBB1234B1Z4",
+        "isActive": true
+    },
+    {
+        "id": "S003",
+        "name": "Royal Paints & Hardware",
+        "address": "Tadepalligudem Bypass",
+        "village": "Tadepalligudem",
+        "district": "West Godavari",
+        "pincode": "534101",
+        "mobile": "9908011223",
+        "gstin": "37CCCCC1234C1Z3",
+        "isActive": true
+    },
+    {
+        "id": "S004",
+        "name": "Godavari Colors",
+        "address": "Cinema Road",
+        "village": "Rajahmundry",
+        "district": "East Godavari",
+        "pincode": "533101",
+        "mobile": "9866098765",
+        "gstin": "37DDDDD1234D1Z2",
+        "isActive": true
+    },
+    {
+        "id": "S005",
+        "name": "Amalapuram Paint House",
+        "address": "Clock Tower Center",
+        "village": "Amalapuram",
+        "district": "East Godavari",
+        "pincode": "533201",
+        "mobile": "9440012345",
+        "gstin": "37EEEEE1234E1Z1",
+        "isActive": false
+    },
+    {
+        "id": "S006",
+        "name": "Kakinada Asian Paints Dealer",
+        "address": "Main Road",
+        "village": "Kakinada",
+        "district": "East Godavari",
+        "pincode": "533001",
+        "mobile": "9988776655",
+        "gstin": "37FFFFF1234F1Z0",
+        "isActive": true
+    }
+]

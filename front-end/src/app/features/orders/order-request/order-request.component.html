@@ -1,0 +1,128 @@
+<div class="container fade-in">
+    <div class="header-actions">
+        <!-- Search, Village, Shop Filters -->
+        <div class="filters-container"
+            style="display: flex; gap: 1rem; width: 100%; justify-content: space-between; flex-wrap: wrap;">
+
+            <div class="search-box global-header-action" style="order: 1;">
+                <span class="search-icon">🔍</span>
+                <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearch($event)"
+                    placeholder="Search requests...">
+            </div>
+
+            <div style="display: flex; gap: 1rem; order: 2; flex-wrap: wrap;">
+                <div class="filter-group">
+                    <select [(ngModel)]="selectedVillage" (ngModelChange)="onVillageChange($event)"
+                        class="form-select global-header-action">
+                        <option value="">-- All Villages --</option>
+                        <option *ngFor="let village of villages$ | async" [value]="village">{{ village }}</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <select [(ngModel)]="selectedShopId" class="form-select global-header-action"
+                        [disabled]="!selectedVillage && !selectedShopId">
+                        <option value="">-- All Shops --</option>
+                        <option *ngFor="let shop of filteredShops$ | async" [value]="shop.id">{{ shop.name }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="standard-dropdown dropdown-container" style="order: 3;" (click)="$event.stopPropagation()">
+                <button (click)="toggleDropdown($event)" class="btn global-export-btn no-margin">
+                    <span>📄 Export</span>
+                    <span class="chevron" [class.open]="showExportDropdown">▼</span>
+                </button>
+                <div class="dropdown-menu glass-panel" *ngIf="showExportDropdown">
+                    <button (click)="exportCSV(); toggleDropdown()" class="dropdown-item">
+                        <span class="icon">📊</span> Download as CSV
+                    </button>
+                    <button (click)="exportPDF(); toggleDropdown()" class="dropdown-item">
+                        <span class="icon">📄</span> Download as PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert for No Active Shops -->
+    <div *ngIf="noActiveShopsInVillage" class="alert alert-danger fade-in">
+        ⚠️ <strong>Notice:</strong> This village has no active shops. Please reactivate shops in the Shop Management
+        section to place orders.
+    </div>
+
+    <!-- Request Grid -->
+    <div class="request-grid">
+        <div *ngFor="let req of stockRequests$ | async" class="request-card glass-panel fade-in">
+            <!-- Header -->
+            <div class="card-header">
+                <span class="request-id">#{{ req.requestId }}</span>
+                <span class="request-date">{{ req.date | date:'mediumDate' }}</span>
+            </div>
+
+            <!-- Body -->
+            <div class="request-info">
+                <!-- Shop Details -->
+                <div class="shop-section">
+                    <span class="shop-name">{{ req.shopName }}</span>
+                    <p class="shop-address" [title]="req.shopAddress">
+                        <span class="icon">📍</span>{{ req.shopAddress }}
+                    </p>
+                    <div class="location-badges">
+                        <span class="location-item village" title="Village/Town">
+                            <span class="icon">🏘️</span> {{ req.shopVillage }}
+                        </span>
+                        <span class="location-item district" title="District">
+                            <span class="icon">🏙️</span> {{ req.shopDistrict }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Product Details -->
+                <div class="product-section">
+                    <div class="info-row">
+                        <span class="label">Product</span>
+                        <span class="value product-name">{{ req.productName }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Quantity</span>
+                        <span class="value">{{ req.requestedQty }}</span>
+                    </div>
+                    <div class="info-row"
+                        style="margin-top: 0.25rem; border-top: 1px dashed rgba(0,0,0,0.1); padding-top: 0.25rem;">
+                        <span class="label">Est. Total</span>
+                        <span class="value total">₹{{ req.totalEstimated | number:'1.2-2' }}</span>
+                    </div>
+                </div>
+                <!-- Status Badge -->
+                <div style="display: flex; justify-content: flex-end;">
+                    <span class="badge"
+                        [ngClass]="{'badge-danger': req.priority === 'Urgent', 'badge-info': req.priority !== 'Urgent'}"
+                        style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; background: rgba(0,0,0,0.05); color: #666;">
+                        {{ req.priority || 'Normal' }} Priority
+                    </span>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="card-actions">
+                <button (click)="createNewOrder(req)" class="btn btn-sm btn-primary">
+                    <span>🆕 Create Order</span>
+                </button>
+                <button (click)="deleteRequest(req.requestId)" class="btn btn-sm btn-delete">
+                    <span>🗑️ Delete</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="(stockRequests$ | async)?.length === 0" class="empty-state">
+        <div class="card glass-panel no-results-card"
+            style="padding: 2rem; border-radius: 12px; border: 1px solid rgba(0,0,0,0.1);">
+            <span class="large-icon">✅</span>
+            <h3>No Pending Requests</h3>
+            <p>All stock requests have been fulfilled or none exist.</p>
+        </div>
+    </div>
+</div>

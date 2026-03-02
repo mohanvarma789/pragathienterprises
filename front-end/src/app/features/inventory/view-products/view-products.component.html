@@ -1,0 +1,79 @@
+<div class="container fade-in">
+    <div class="header-actions mb-4 print-hide">
+        <div class="search-box global-header-action">
+            <span class="search-icon">🔍</span>
+            <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearch($event)"
+                placeholder="Search products..." class="search-input">
+        </div>
+
+        <!-- Status Filter -->
+        <div class="filter-box">
+            <select (change)="updateFilter($event)" title="Status Filter" aria-label="Status Filter"
+                class="form-select global-header-action">
+                <option value="">All Status</option>
+                <option value="in-stock">In Stock</option>
+                <option value="low-stock">Low Stock (&lt; 20)</option>
+                <option value="out-of-stock">Out of Stock</option>
+            </select>
+        </div>
+
+        <div class="standard-dropdown dropdown-container">
+            <button (click)="toggleDropdown()" class="btn global-export-btn">
+                <span>📄 Export</span>
+                <span class="chevron" [class.open]="showExportDropdown">▼</span>
+            </button>
+            <!-- Overlay to close dropdown on outside click -->
+            <div class="dropdown-overlay" *ngIf="showExportDropdown" (click)="toggleDropdown()"></div>
+            <div class="dropdown-menu glass-panel" *ngIf="showExportDropdown">
+                <button (click)="exportExcel(); toggleDropdown()" class="dropdown-item">
+                    <span class="icon">📊</span> Download as CSV
+                </button>
+                <button (click)="exportPDF(); toggleDropdown()" class="dropdown-item">
+                    <span class="icon">📄</span> Download as PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="product-grid">
+        <div *ngFor="let product of filteredProducts$ | async; let i = index" class="product-card glass-panel fade-in"
+            [class.out-of-stock]="product.stock <= 0" [class.low-stock]="product.stock > 0 && product.stock < 21">
+            <div class="card-header">
+                <span class="sl-no">#{{ i + 1 }}</span>
+                <div class="card-actions">
+                    <button (click)="navigateToAddStock(product.id)" class="btn-icon text-success"
+                        title="Add Product Stock">+</button>
+                    <a [routerLink]="['/inventory/edit', product.id]" class="btn-icon" title="Edit">✏️</a>
+                    <button (click)="deleteProduct(product.id)" class="btn-icon text-danger" title="Delete">🗑️</button>
+                </div>
+            </div>
+
+            <div class="product-info">
+                <div class="thumb-placeholder">
+                    <img *ngIf="product.imageUrl" [src]="product.imageUrl" alt="{{ product.name }}"
+                        title="{{ product.name }}" class="product-img" appClickableImage [imageName]="product.name">
+                    <span *ngIf="!product.imageUrl">📦</span>
+                </div>
+                <div class="product-details">
+                    <h3 class="product-name">{{ product.name }}</h3>
+                    <div class="product-meta">
+                        <span class="price">Price: ₹{{ product.price }}</span>
+                        <span class="badge" [class.badge-success]="product.stock >= 21"
+                            [class.badge-warning]="product.stock > 0 && product.stock < 21"
+                            [class.badge-danger]="product.stock <= 0">
+                            {{ product.stock <= 0 ? 'Out of Stock' : 'Stock: ' + product.stock }} </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="(filteredProducts$ | async)?.length === 0" class="empty-state fade-in">
+        <div class="card glass-panel no-results-card">
+            <span class="large-icon">🔍</span>
+            <h3>Item not found</h3>
+            <p>We couldn't find any products matching "<strong>{{ searchTerm }}</strong>"</p>
+            <button (click)="searchTerm = ''; onSearch('')" class="btn btn-outline btn-sm mt-3">Clear Search</button>
+        </div>
+    </div>
+</div>

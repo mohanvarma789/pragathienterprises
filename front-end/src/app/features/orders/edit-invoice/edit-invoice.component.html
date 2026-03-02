@@ -1,0 +1,347 @@
+<div class="container fade-in">
+    <div class="header-row mb-4">
+        <h2>Complete Invoice Editor</h2>
+        <div class="header-actions">
+            <button *ngIf="order" (click)="goBackToSelection()" class="btn btn-secondary mr-2">Back to edit
+                invoice</button>
+            <a *ngIf="order" [routerLink]="['/orders/invoice', order.id]" class="btn btn-primary">View Final Invoice</a>
+        </div>
+    </div>
+
+    <div *ngIf="!order" class="card glass-panel">
+        <h3 class="section-title">Search Invoice</h3>
+        <div class="form-group mb-4">
+            <label for="searchVillage">Village/Town</label>
+            <select id="searchVillage" title="Village" aria-label="Village" [ngModel]="selectedVillage$ | async"
+                (ngModelChange)="onVillageChange($event)">
+                <option value="">-- All Villages --</option>
+                <option *ngFor="let village of villages$ | async" [value]="village">{{ village }}</option>
+            </select>
+        </div>
+
+        <div *ngIf="isVillageInactive$ | async" class="alert alert-danger fade-in mb-4">
+            ⚠️ <strong>Notice:</strong> This village has no active shops.
+        </div>
+
+        <div *ngIf="selectedVillage$ | async" class="form-group mb-4 fade-in">
+            <label for="searchShop">Select Shop</label>
+            <select id="searchShop" title="Shop" aria-label="Shop" [ngModel]="selectedShopId$ | async"
+                (ngModelChange)="onShopFilterChange($event)">
+                <option value="" disabled selected>-- Select Shop --</option>
+                <option value="">-- All Shops --</option>
+                <option *ngFor="let shop of filteredShops$ | async" [value]="shop.id">{{ shop.name }}</option>
+            </select>
+        </div>
+
+        <div class="form-group mb-4">
+            <label for="searchInvoice">Select Invoice to Edit</label>
+            <p class="mb-2 text-sm text-muted">Select an invoice to edit its details:</p>
+            <select id="searchInvoice" title="Invoice" aria-label="Invoice" (change)="onOrderSelect($event)">
+                <option value="">-- Select Invoice --</option>
+                <option value="create-new">++ Create New Order ++</option>
+                <option *ngFor="let o of filteredOrders$ | async" [value]="o.id">
+                    {{ o.invoiceNo.replace('INV-', '').replace('NV-', '') }} - {{ o.date | date:'dd/MM/yyyy' }}
+                </option>
+            </select>
+        </div>
+    </div>
+
+    <form *ngIf="order" [formGroup]="invoiceForm" (ngSubmit)="onSubmit()" class="invoice-editor-form">
+        <!-- Section: Company Details -->
+        <div class="form-section card glass-panel">
+            <h3 class="section-title">Company Profile</h3>
+            <div class="form-group mb-3">
+                <label for="companyName">Company Name</label>
+                <input type="text" id="companyName" title="Company Name" placeholder="Company Name"
+                    formControlName="companyName">
+            </div>
+            <div class="grid-layout cols-2 small-gap">
+                <div class="form-group">
+                    <label for="companyGSTIN">Company GSTIN</label>
+                    <input type="text" id="companyGSTIN" title="Company GSTIN" placeholder="Company GSTIN"
+                        formControlName="companyGSTIN">
+                </div>
+                <div class="form-group">
+                    <label for="companyCell">Company Cell</label>
+                    <input type="text" id="companyCell" title="Company Cell" placeholder="Company Cell"
+                        formControlName="companyCell">
+                </div>
+            </div>
+            <div class="form-group mt-3">
+                <label for="companyAddress">Company Address</label>
+                <textarea id="companyAddress" title="Company Address" placeholder="Company Address"
+                    formControlName="companyAddress" rows="2"></textarea>
+            </div>
+        </div>
+
+        <!-- Section: Invoice & Transport Meta -->
+        <div class="form-section card glass-panel">
+            <h3 class="section-title">Invoice & Transport</h3>
+            <div class="grid-layout cols-2 small-gap">
+                <div class="form-group">
+                    <label for="invoiceNo">Invoice No:</label>
+                    <input type="text" id="invoiceNo" title="Invoice No" placeholder="Invoice No"
+                        formControlName="invoiceNo">
+                </div>
+                <div class="form-group">
+                    <label for="invoiceDate">Invoice Date<span class="required-asterisk">*</span></label>
+                    <input type="date" id="invoiceDate" title="Invoice Date" placeholder="Invoice Date"
+                        formControlName="date">
+                    <div *ngIf="invoiceForm.get('date')?.touched && invoiceForm.get('date')?.invalid" class="error-msg">
+                        Date is
+                        required </div>
+                </div>
+                <div class="form-group">
+                    <label for="reverseCharge">Reverse Charge</label>
+                    <select id="reverseCharge" title="Reverse Charge" aria-label="Reverse Charge"
+                        formControlName="reverseCharge">
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="paymentMode">Payment Mode</label>
+                    <select id="paymentMode" title="Payment Mode" aria-label="Payment Mode"
+                        formControlName="paymentMode">
+                        <option value="Cash">Cash</option>
+                        <option value="Online">Online</option>
+                        <option value="Cheque">Cheque</option>
+                        <option value="Credit">Credit</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="vehicleNo">Vehicle No</label>
+                    <input type="text" id="vehicleNo" title="Vehicle No" placeholder="Vehicle No"
+                        formControlName="vehicleNo">
+                </div>
+                <div class="form-group">
+                    <label for="eWayBillNo">E-Way Bill No</label>
+                    <input type="text" id="eWayBillNo" title="E-Way Bill No" placeholder="E-Way Bill No"
+                        formControlName="eWayBillNo">
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Shop Selection (Auto-fill) -->
+        <div class="form-section card glass-panel">
+            <h3 class="section-title">Customer Details (Auto-fill)</h3>
+            <div class="grid-layout cols-2 small-gap">
+                <div class="form-group">
+                    <label for="customerVillage">Village/Town<span class="required-asterisk">*</span></label>
+                    <select id="customerVillage" title="Customer Village" aria-label="Customer Village"
+                        [ngModel]="selectedVillage$ | async" (ngModelChange)="onVillageChange($event)"
+                        [ngModelOptions]="{standalone: true}">
+                        <option value="" disabled selected>-- Select Village --</option>
+                        <option *ngFor="let village of villages$ | async" [value]="village">{{ village }}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="customerShop">Select Shop<span class="required-asterisk">*</span></label>
+                    <select id="customerShop" title="Customer Shop" aria-label="Customer Shop" formControlName="shopId"
+                        (change)="onShopSelect()">
+                        <option value="" disabled selected>-- Select Shop --</option>
+                        <option *ngFor="let shop of filteredShops$ | async" [value]="shop.id">{{ shop.name }}</option>
+                    </select>
+                    <div *ngIf="invoiceForm.get('shopId')?.touched && invoiceForm.get('shopId')?.invalid"
+                        class="error-msg"> Please
+                        select a shop </div>
+                </div>
+            </div>
+            <div *ngIf="isVillageInactive$ | async" class="alert alert-danger fade-in mt-2">
+                ⚠️ <strong>Notice:</strong> This village has no active shops.
+            </div>
+        </div>
+
+        <!-- Section: Billed To -->
+        <div class="form-section card glass-panel">
+            <h3 class="section-title">Receiver (Billed To)</h3>
+            <div class="form-group">
+                <label for="billedToName">Name</label>
+                <input type="text" id="billedToName" title="Billed To Name" placeholder="Name"
+                    formControlName="billedToName">
+            </div>
+            <div class="form-group">
+                <label for="billedToAddress">Address</label>
+                <textarea id="billedToAddress" title="Billed To Address" placeholder="Address"
+                    formControlName="billedToAddress" rows="2"></textarea>
+            </div>
+            <div class="grid-layout cols-2 small-gap">
+                <div class="form-group">
+                    <label for="billedToPhone">Phone</label>
+                    <input type="text" id="billedToPhone" title="Billed To Phone" placeholder="Phone"
+                        formControlName="billedToPhone">
+                </div>
+                <div class="form-group">
+                    <label for="billedToGSTIN">GSTIN</label>
+                    <input type="text" id="billedToGSTIN" title="Billed To GSTIN" placeholder="GSTIN"
+                        formControlName="billedToGSTIN">
+                </div>
+                <div class="form-group">
+                    <label for="billedToState">State</label>
+                    <input type="text" id="billedToState" title="Billed To State" placeholder="State"
+                        formControlName="billedToState">
+                </div>
+                <div class="form-group">
+                    <label for="billedToCode">State Code</label>
+                    <input type="text" id="billedToCode" title="Billed To State Code" placeholder="State Code"
+                        formControlName="billedToCode">
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Shipped To -->
+        <div class="form-section card glass-panel">
+            <h3 class="section-title">Consignee (Shipped To)</h3>
+            <div class="form-group">
+                <label for="shippedToName">Name</label>
+                <input type="text" id="shippedToName" title="Shipped To Name" placeholder="Name" formControlName="shippedToName">
+            </div>
+            <div class="form-group">
+                <label for="shippedToAddress">Address</label>
+                <textarea id="shippedToAddress" title="Shipped To Address" placeholder="Address" formControlName="shippedToAddress" rows="2"></textarea>
+            </div>
+            <div class="grid-layout cols-2 small-gap">
+                <div class="form-group">
+                    <label for="shippedToPhone">Phone</label>
+                    <input type="text" id="shippedToPhone" title="Shipped To Phone" placeholder="Phone" formControlName="shippedToPhone">
+                </div>
+                <div class="form-group">
+                    <label for="shippedToGSTIN">GSTIN</label>
+                    <input type="text" id="shippedToGSTIN" title="Shipped To GSTIN" placeholder="GSTIN" formControlName="shippedToGSTIN">
+                </div>
+                <div class="form-group">
+                    <label for="shippedToState">State</label>
+                    <input type="text" id="shippedToState" title="Shipped To State" placeholder="State" formControlName="shippedToState">
+                </div>
+                <div class="form-group">
+                    <label for="shippedToCode">State Code</label>
+                    <input type="text" id="shippedToCode" title="Shipped To State Code" placeholder="State Code" formControlName="shippedToCode">
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Invoice Items -->
+        <div class="form-section card glass-panel">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="section-title mb-0">Invoice Items</h3>
+            </div>
+
+            <div class="items-list" formArrayName="items">
+                <div *ngFor="let item of itemsFormArray.controls; let i = index" [formGroupName]="i"
+                    class="item-card glass-panel fade-in">
+                    <div class="item-grid">
+                        <!-- Product Name -->
+                        <div class="form-group col-span-2">
+                            <label [for]="'productName' + i">Description of Goods<span class="required-asterisk">*</span></label>
+                            <input type="text" [id]="'productName' + i" title="Product Name" formControlName="productName" placeholder="Ex: Tia Classic Roller">
+                            <div *ngIf="item.get('productName')?.touched && item.get('productName')?.invalid"
+                                class="error-msg">
+                                Description is required </div>
+                        </div>
+
+                        <!-- HSN -->
+                        <div class="form-group">
+                            <label [for]="'hsn' + i">HSN</label>
+                            <input type="text" [id]="'hsn' + i" title="HSN" formControlName="hsn" placeholder="3214">
+                        </div>
+
+                        <!-- Rate -->
+                        <div class="form-group">
+                            <label [for]="'rate' + i">Rate (₹)<span class="required-asterisk">*</span></label>
+                            <input type="number" [id]="'rate' + i" title="Rate" formControlName="rate" (input)="updateCalculations()" class="sm-input" placeholder="Rate">
+                            <div *ngIf="item.get('rate')?.touched && item.get('rate')?.invalid" class="error-msg">
+                                Required </div>
+                        </div>
+
+                        <!-- Quantity -->
+                        <div class="form-group">
+                            <label [for]="'qty' + i">Quantity<span class="required-asterisk">*</span></label>
+                            <input type="number" [id]="'qty' + i" title="Quantity" formControlName="qty" (input)="updateCalculations()" class="sm-input" placeholder="Quantity">
+                            <div *ngIf="item.get('qty')?.touched && item.get('qty')?.invalid" class="error-msg">
+                                Required </div>
+                        </div>
+
+                        <!-- Amount -->
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <div class="amount-display"> ₹{{ getAmount(i) | number:'1.2-2' }} </div>
+                        </div>
+
+                        <!-- Remove Actions -->
+                        <div class="item-actions">
+                            <label class="invisible-label">&nbsp;</label>
+                            <button type="button" (click)="removeItem(i)" class="btn-icon text-danger"
+                                title="Remove Item">🗑️</button>
+                        </div>
+                    </div>
+
+                    <!-- Centered Add Item button inside the first card -->
+                    <div *ngIf="i === 0" class="mt-4 flex justify-center">
+                        <button type="button" (click)="addItem()" class="btn btn-secondary">+ Add More Item</button>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="itemsFormArray.length === 0" class="empty-items py-8 text-center">
+                <p class="text-muted italic mb-4">No items added yet.</p>
+                <button type="button" (click)="addItem()" class="btn btn-secondary">+ Add Item to Start</button>
+            </div>
+        </div>
+
+        <!-- Section: Totals -->
+        <div class="form-section card glass-panel totals-section">
+            <div class="flex justify-end">
+                <div class="totals-grid">
+                    <div class="total-row">
+                        <label for="totalBeforeTax">Total Amount Before Tax:</label>
+                        <input type="number" id="totalBeforeTax" title="Total Amount Before Tax" placeholder="Total Before Tax" formControlName="totalBeforeTax" readonly class="readonly-input">
+                    </div>
+                    <div class="total-row">
+                        <label for="cgst">CGST {{ constants.DEFAULT_TAX_RATE }}%:</label>
+                        <input type="number" id="cgst" title="CGST" placeholder="CGST" formControlName="cgst" readonly class="readonly-input">
+                    </div>
+                    <div class="total-row">
+                        <label for="sgst">SGST {{ constants.DEFAULT_TAX_RATE }}%:</label>
+                        <input type="number" id="sgst" title="SGST" placeholder="SGST" formControlName="sgst" readonly class="readonly-input">
+                    </div>
+                    <div class="total-row">
+                        <label for="taxAmount">Tax Amount GST:</label>
+                        <input type="number" id="taxAmount" title="Tax Amount GST" placeholder="Tax Amount GST" formControlName="taxAmount" readonly class="readonly-input">
+                    </div>
+                    <div class="total-row highlight">
+                        <label for="grandTotal">Grand Total:</label>
+                        <input type="number" id="grandTotal" title="Grand Total" placeholder="Grand Total" formControlName="grandTotal" readonly class="readonly-input">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group mt-4">
+                <label for="rupeeInWords">Rupee in Words</label>
+                <input type="text" id="rupeeInWords" title="Rupee in Words" placeholder="Rupee in Words" formControlName="rupeeInWords">
+            </div>
+
+            <div class="bank-details-summary">
+                <h4 class="text-sm font-semibold mb-3 custom-primary-heading">Bank Account Details</h4>
+                <div class="bank-grid">
+                    <div class="form-group">
+                        <label for="bankName">Bank Name</label>
+                        <input type="text" id="bankName" title="Bank Name" placeholder="Bank Name" formControlName="bankName">
+                    </div>
+                    <div class="form-group">
+                        <label for="bankAccNo">Account Number</label>
+                        <input type="text" id="bankAccNo" title="Account Number" placeholder="Account Number" formControlName="bankAccNo">
+                    </div>
+                    <div class="form-group">
+                        <label for="bankIFSC">IFSC Code</label>
+                        <input type="text" id="bankIFSC" title="IFSC Code" placeholder="IFSC Code" formControlName="bankIFSC">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions-row mt-6 flex justify-center gap-4 sticky-bottom">
+            <button type="submit" class="btn btn-primary btn-lg" [disabled]="invoiceForm.invalid">
+                Save {{ isNewOrder ? 'New Invoice' : 'All Changes' }}
+            </button>
+        </div>
+    </form>
+</div>

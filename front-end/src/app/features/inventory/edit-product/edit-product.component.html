@@ -1,0 +1,76 @@
+<div class="container fade-in">
+    <div class="card glass-panel form-card">
+        <h2 class="mb-4 text-center">Edit Product</h2>
+
+        <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+            <!-- Basic Info -->
+            <div class="grid grid-cols-2">
+                <div class="form-group">
+                    <label for="editProductName">Product Name<span class="required-asterisk">*</span></label>
+                    <input type="text" id="editProductName" title="Product Name" placeholder="Product Name"
+                        formControlName="name">
+                    <div *ngIf="productForm.get('name')?.touched && productForm.get('name')?.invalid" class="error-msg">
+                        Name is
+                        required </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="editHsnCode">HSN Code<span class="required-asterisk">*</span></label>
+                    <input type="text" id="editHsnCode" title="HSN Code" formControlName="hsn"
+                        placeholder="Enter HSN Code">
+                    <div *ngIf="productForm.get('hsn')?.touched && productForm.get('hsn')?.invalid" class="error-msg">
+                        HSN is
+                        required </div>
+                </div>
+            </div>
+
+            <div class="form-group mb-4">
+                <label>Product Image</label>
+                <div class="image-upload-container">
+                    <div class="image-preview" *ngIf="imagePreview">
+                        <img [src]="imagePreview" alt="Preview" appClickableImage>
+                        <button type="button" class="btn-remove-image" (click)="removeImage()">×</button>
+                    </div>
+                    <div class="upload-placeholder" *ngIf="!imagePreview">
+                        <input type="file" (change)="onFileSelected($event)" accept="image/*" id="fileInput"
+                            class="hidden-input">
+                        <label for="fileInput" class="upload-label">
+                            <span class="upload-icon">📸</span>
+                            <span>Click to Change Image</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing & Stock -->
+            <div class="grid grid-cols-2">
+                <div class="form-group">
+                    <label for="editPrice">Price (₹)<span class="required-asterisk">*</span></label>
+                    <input type="number" id="editPrice" title="Price" placeholder="Price" formControlName="price">
+                    <div *ngIf="productForm.get('price')?.touched && productForm.get('price')?.invalid"
+                        class="error-msg">
+                        <span *ngIf="productForm.get('price')?.errors?.['required']">Price is required</span>
+                        <span *ngIf="productForm.get('price')?.errors?.['min']">Min price is 0</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editStock">Current Stock<span class="required-asterisk">*</span></label>
+                    <input type="number" id="editStock" title="Current Stock" placeholder="Current Stock"
+                        formControlName="stock" min="0" (input)="preventNegativeStock($event)">
+                    <div *ngIf="productForm.get('stock')?.touched && productForm.get('stock')?.invalid"
+                        class="error-msg">
+                        <span *ngIf="productForm.get('stock')?.errors?.['required']">Stock is required</span>
+                        <span *ngIf="productForm.get('stock')?.errors?.['min']">Min stock is 0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions mt-4">
+                <button type="button" routerLink="/inventory" class="btn btn-secondary">Cancel</button>
+                <button type="submit" [disabled]="productForm.invalid || productForm.pristine" class="btn btn-primary">
+                    Update
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

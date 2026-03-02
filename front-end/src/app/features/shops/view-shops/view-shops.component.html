@@ -1,0 +1,94 @@
+<div class="container fade-in">
+    <div class="header-actions mb-4">
+        <div class="search-box global-header-action">
+            <span class="search-icon">🔍</span>
+            <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearch($event)" placeholder="Search shops..."
+                class="search-input">
+        </div>
+
+        <div class="standard-dropdown select-container">
+            <label for="villageSelect" class="sr-only">Village Select</label>
+            <select id="villageSelect" title="Village Filter" aria-label="Village Filter" [(ngModel)]="selectedVillage"
+                (ngModelChange)="onVillageFilter($event)" class="village-select glass-panel global-header-action">
+                <option value="">All Villages/Towns</option>
+                <option *ngFor="let village of villages$ | async" [value]="village"> {{ village }} </option>
+            </select>
+        </div>
+
+        <div class="standard-dropdown dropdown-container">
+            <button (click)="toggleDropdown()" class="btn global-export-btn">
+                <span>📄 Export</span>
+                <span class="chevron" [class.open]="showExportDropdown">▼</span>
+            </button>
+            <!-- Overlay to close dropdown on outside click -->
+            <div class="dropdown-overlay" *ngIf="showExportDropdown" (click)="toggleDropdown()"></div>
+            <div class="dropdown-menu glass-panel" *ngIf="showExportDropdown">
+                <button (click)="exportExcel(); toggleDropdown()" class="dropdown-item">
+                    <span class="icon">📊</span> Download as CSV
+                </button>
+                <button (click)="exportPDF(); toggleDropdown()" class="dropdown-item">
+                    <span class="icon">📄</span> Download as PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="shop-grid">
+        <div *ngFor="let shop of filteredShops$ | async; let i = index" class="shop-card glass-panel fade-in"
+            [class.inactive]="!shop.isActive">
+
+            <div class="card-header">
+                <span class="sl-no">#{{ i + 1 }}</span>
+                <span class="badge" [class.badge-success]="shop.isActive" [class.badge-danger]="!shop.isActive"> {{
+                    shop.isActive ?
+                    'Active' : 'Inactive' }} </span>
+                <div class="card-actions">
+                    <button (click)="navigateToEditShop(shop.id)" class="btn-icon" title="Edit">✏️</button>
+                    <button (click)="deleteShop(shop.id)" class="btn-icon text-danger" title="Delete">🗑️</button>
+                    <button (click)="toggleStatus(shop.id)" class="btn-icon"
+                        [title]="shop.isActive ? 'Deactivate' : 'Activate'"> {{
+                        shop.isActive ? '🚫' : '✅' }} </button>
+                </div>
+            </div>
+
+            <div class="shop-info">
+                <div class="shop-details">
+                    <h3 class="shop-name">{{ shop.name }}</h3>
+                    <div class="shop-location-details">
+                        <p class="shop-address" [title]="shop.address">
+                            <span class="icon">📍</span>{{ shop.address }}
+                        </p>
+                        <div class="location-badges">
+                            <span class="location-item village" [title]="'Village/Town'">
+                                <span class="icon">🏘️</span> {{ shop.village || 'Not Set' }} </span>
+                            <span class="location-item district" [title]="'District'">
+                                <span class="icon">🏙️</span> {{ shop.district }} </span>
+                        </div>
+                    </div>
+
+                    <div class="shop-meta">
+                        <div class="meta-item">
+                            <span class="label">Pincode:</span>
+                            <span class="value">{{ shop.pincode }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="label">Mobile:</span>
+                            <span class="value">{{ shop.mobile }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="label">GSTIN:</span>
+                            <span class="value">{{ shop.gstin }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="(filteredShops$ | async)?.length === 0" class="empty-state card glass-panel">
+        <div class="text-center p-4 text-muted">
+            <span class="large-icon">🏪</span>
+            <p>No shops found matching your criteria</p>
+        </div>
+    </div>
+</div>

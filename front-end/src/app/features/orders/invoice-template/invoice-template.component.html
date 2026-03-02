@@ -1,0 +1,204 @@
+<div class="invoice-viewer">
+    <div class="top-nav no-print" *ngIf="order">
+        <div class="nav-left">
+            <button class="btn-nav" routerLink="/orders"> ⬅️ Back to Orders </button>
+        </div>
+        <div class="nav-right">
+            <button class="btn-download" (click)="downloadPdf()"> 📥 Download </button>
+            <button class="btn-print" (click)="printInvoice()"> 🖨️ Print </button>
+            <button class="btn-primary" [routerLink]="['/orders/edit-invoice', order.id]"> ✏️ Edit Invoice </button>
+        </div>
+    </div>
+
+    <ng-container *ngIf="order">
+        <div class="invoice-paper" *ngFor="let pageItems of pages; let i = index">
+            <div class="invoice-box">
+                <!-- Watermark Container -->
+                <div class="watermark-container watermark-bg"></div>
+
+                <!-- Top Row -->
+                <div class="top-header">
+                    <div class="header-left">GSTIN: {{ order.companyGSTIN || constants.COMPANY_GSTIN }}</div>
+                    <div class="header-center double-underline">TAX INVOICE</div>
+                    <div class="header-right">CELL: {{ order.companyCell || constants.COMPANY_CELL }}</div>
+                </div>
+
+                <!-- Company Info Centered -->
+                <div class="company-section text-center p-2">
+                    <h1 class="company-name">{{ constants.COMPANY_NAME }}</h1>
+                    <p class="company-address">{{ order.companyAddress || constants.COMPANY_ADDRESS }}</p>
+                </div>
+
+                <!-- Meta Info Section -->
+                <div class="meta-section border-bottom">
+                    <div class="meta-flex-row">
+                        <div class="meta-half border-right">
+                            <div class="meta-row"><strong>Reverse Charge:</strong> <span>{{ order.reverseCharge || 'No'
+                                    }}</span></div>
+                            <div class="meta-row"><strong>Invoice No:</strong> <span>{{ order.invoiceNo.replace('INV-',
+                                    '').replace('NV-', '') }}</span></div>
+                            <div class="meta-row"><strong>Invoice Date:</strong> <span>{{ order.date | date:'dd/MM/yyyy'
+                                    }}</span></div>
+                        </div>
+                        <div class="meta-half">
+                            <div class="meta-row"><strong>Payment Mode:</strong> <span>{{ order.paymentMode || 'Cash'
+                                    }}</span></div>
+                            <div class="meta-row"><strong>Vehicle No:</strong> <span>{{ order.vehicleNo || 'Not
+                                    provided' }}</span></div>
+                            <div class="meta-row"><strong>E-Way Bill No:</strong> <span>{{ order.eWayBillNo || 'Not
+                                    provided' }}</span></div>
+                        </div>
+                    </div>
+                    <div class="state-row text-center border-top">
+                        <strong>State:</strong> ANDHRA PRADESH <strong class="ml-15">Code:</strong> 37
+                    </div>
+                </div>
+
+                <!-- Details Grid -->
+                <div class="details-grid border-bottom">
+                    <div class="details-col border-right">
+                        <div class="details-label text-center border-bottom">Details of Receiver (Billed To)</div>
+                        <div class="details-content p-2">
+                            <p><strong>Name:</strong> {{ order.billedToName }}</p>
+                            <p><strong>Address:</strong> {{ order.billedToAddress }}</p>
+                            <p><strong>Phone:</strong> {{ order.billedToPhone }}</p>
+                            <p><strong>GSTIN:</strong> {{ order.billedToGSTIN }}</p>
+                            <p><strong>State:</strong> {{ order.billedToState }}</p>
+                            <p><strong>Code:</strong> {{ order.billedToCode }}</p>
+                        </div>
+                    </div>
+                    <div class="details-col">
+                        <div class="details-label text-center border-bottom">Details of Consignee (Shipped To)</div>
+                        <div class="details-content p-2">
+                            <p><strong>Name:</strong> {{ order.shippedToName || shop?.name }}</p>
+                            <p><strong>Address:</strong> {{ order.shippedToAddress || shop?.address }}</p>
+                            <p><strong>Phone:</strong> {{ order.shippedToPhone || shop?.mobile }}</p>
+                            <p><strong>GSTIN:</strong> {{ order.shippedToGSTIN || shop?.gstin }}</p>
+                            <p><strong>State:</strong> {{ order.shippedToState }}</p>
+                            <p><strong>Code:</strong> {{ order.shippedToCode }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Items Table -->
+                <div class="table-container">
+                    <table class="main-table">
+                        <thead>
+                            <tr>
+                                <th class="w-50">S.No</th>
+                                <th>Description of Goods</th>
+                                <th class="w-100">HSN</th>
+                                <th class="w-100">Rate (₹)</th>
+                                <th class="w-80">Qty</th>
+                                <th class="w-120">Amount (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of pageItems; let j = index">
+                                <td class="text-center">{{ (i * 8) + j + 1 }}</td>
+                                <td>{{ item.productName }}</td>
+                                <td class="text-center">{{ item.hsn }}</td>
+                                <td class="text-right">{{ item.rate | number:'1.2-2' }}</td>
+                                <td class="text-center">{{ item.qty }}</td>
+                                <td class="text-right">{{ item.amount | number:'1.2-2' }}</td>
+                            </tr>
+                            <tr *ngFor="let k of getEmptyRows(pageItems.length)" class="empty-row">
+                                <td>&nbsp;</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Footer/Summary Section -->
+                <div class="footer-summary border-top">
+                    <div class="words-line p-2 italic">
+                        <strong>Rupee in Words:</strong> <em>{{ order.rupeeInWords ||
+                            (order.totalAmount | amountInWords) }}.</em>
+                    </div>
+
+                    <div class="totals-section border-top">
+                        <div class="totals-grid-full border-bottom">
+                            <div class="totals-row border-bottom"><span>Total Amount Before Tax:</span> <span
+                                    class="val">₹{{
+                                    (order.totalBeforeTax || order.subTotal) | number:'1.2-2' }}</span></div>
+                            <div class="totals-row border-bottom"><span>CGST {{ constants.DEFAULT_TAX_RATE }}%:</span>
+                                <span class="val">₹{{ order.cgst
+                                    |
+                                    number:'1.2-2' }}</span>
+                            </div>
+                            <div class="totals-row border-bottom"><span>SGST {{ constants.DEFAULT_TAX_RATE }}%:</span>
+                                <span class="val">₹{{ order.sgst
+                                    |
+                                    number:'1.2-2' }}</span>
+                            </div>
+                            <div class="totals-row border-double-top"><span>Tax Amount GST:</span> <span class="val">₹{{
+                                    (order.taxAmount || (order.cgst + order.sgst)) | number:'1.2-2' }}</span></div>
+                            <div class="totals-row border-double-top border-double-bottom"><span>Total Amount After
+                                    Tax:</span> <span class="val">₹{{ (order.totalAfterTax || order.totalAmount) |
+                                    number:'1.2-2' }}</span></div>
+                        </div>
+                        <div class="grand-total-row p-2">
+                            <strong>Grand Total:</strong> <span class="val"><strong>₹{{ (order.grandTotal ||
+                                    order.totalAmount) |
+                                    number:'1.2-2' }}</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Bank and QR Section -->
+                    <div class="bank-qr-section border-top">
+                        <div class="bank-details p-2">
+                            <h3 class="section-title">Bank Details</h3>
+                            <p><strong>Account Number:</strong> {{ order.bankAccNo || constants.COMPANY_BANK_ACC }}</p>
+                            <p><strong>IFSC Code:</strong> {{ order.bankIFSC || constants.COMPANY_BANK_IFSC }}</p>
+                            <p><strong>Bank Name:</strong> {{ order.bankName || constants.COMPANY_BANK_NAME }}</p>
+                        </div>
+                        <div class="qr-placeholder text-center">
+                            <div class="qr-image-wrapper">
+                                <img src="qr-code.jpg" alt="QR Code" class="qr-img-large">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="signature-section border-top p-2">
+                        <div class="text-right">
+                            <div class="inline-center">
+                                <p class="small-text font-bold">Certified that the particulars given above are true and
+                                    correct</p>
+                                <p class="font-bold mt-1 text-13">For: {{ constants.COMPANY_NAME }}</p>
+                            </div>
+                        </div>
+                        <div class="mt-14 flex-row justify-between items-baseline">
+                            <div class="font-bold pl-4 text-11">Receiver's Signature with Stamp</div>
+                            <div class="font-bold auth-sig text-11">Authorised
+                                Signatory</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Dynamic Page Numbering -->
+            <div class="page-numbering no-print" *ngIf="pages.length > 1"> Page {{ i + 1 }} of {{ pages.length }} </div>
+            <!-- Print-only Page Numbering -->
+            <div class="page-numbering print-only" *ngIf="pages.length > 1"> Page {{ i + 1 }} of {{ pages.length }}
+            </div>
+        </div>
+    </ng-container>
+
+    <div *ngIf="!order" class="error-container glass-panel no-print">
+        <h2>❌ Order Not Found</h2>
+        <p>The invoice details could not be loaded. This might happen if the order ID is invalid or has been deleted.
+        </p>
+        <button class="btn-nav mt-4" routerLink="/orders">Back to Orders</button>
+    </div>
+
+    <div *ngIf="order && !shop" class="error-container glass-panel no-print mt-4">
+        <h2>⚠️ Shop Details Missing</h2>
+        <p>We found the order (Invoice: {{ order.invoiceNo.replace('INV-', '').replace('NV-', '') }}), but the
+            associated
+            shop information is missing from the database.</p>
+    </div>
+</div>

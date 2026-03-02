@@ -1,0 +1,25 @@
+<div class="container fade-in">
+    <div class="card glass-panel upload-card">
+        <h2 class="mb-4">Upload File</h2>
+
+        <div class="upload-area" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
+            <div class="icon">📂</div>
+            <p>Drag & Drop your file here</p>
+            <p class="text-small text-muted mb-2">Supported: Excel, CSV</p>
+            <p class="text-muted">or</p>
+            <label class="btn btn-primary"> Browse File <input type="file" (change)="onFileSelected($event)"
+                    accept=".xlsx, .xls, .csv" hidden> </label>
+        </div>
+
+        <div *ngIf="selectedFile" class="file-preview">
+            <p><strong>Selected:</strong> {{ selectedFile.name }}</p>
+            <button class="btn btn-primary w-full" (click)="upload()" [disabled]="processing"> {{ processing ?
+                'Processing...' :
+                'Upload & Process' }} </button>
+        </div>
+
+        <div *ngIf="message" class="mt-4 p-3 rounded" [ngClass]="{'bg-success': success, 'bg-error': !success}"> {{
+            message }}
+        </div>
+    </div>
+</div>

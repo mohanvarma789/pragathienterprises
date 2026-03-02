@@ -1,0 +1,66 @@
+<div class="container fade-in">
+    <div class="card glass-panel form-card">
+        <div class="header-section mb-4">
+            <h2>Add Product Stock</h2>
+        </div>
+
+        <!-- Loading managed by ngx-spinner -->
+
+        <div *ngIf="product">
+            <!-- Basic Info (Read Only) -->
+            <div class="form-group">
+                <label for="productName">Product Name</label>
+                <input type="text" id="productName" title="Product Name" placeholder="Product Name"
+                    [value]="product.name" disabled class="form-control disabled-input">
+            </div>
+
+            <div class="form-group mb-4">
+                <label>Product Image</label>
+                <div class="image-display-container">
+                    <div class="image-preview" *ngIf="product.imageUrl">
+                        <img [src]="product.imageUrl" alt="{{ product.name }}" title="{{ product.name }}"
+                            appClickableImage [imageName]="product.name">
+                    </div>
+                    <div class="no-image-placeholder" *ngIf="!product.imageUrl">
+                        <span>📦 No Image</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stock Management (Side by Side) -->
+            <div class="grid grid-cols-2 mt-4">
+                <div class="form-group highlight-section current-stock-section">
+                    <label class="highlight-label" for="currentStock">Current Stock</label>
+                    <input type="number" id="currentStock" title="Current Stock" placeholder="Current Stock"
+                        [value]="product.stock" disabled class="form-control disabled-input">
+                </div>
+
+                <div class="form-group highlight-section">
+                    <label class="highlight-label" for="addQuantity">Quantity to Add<span
+                            class="required-asterisk">*</span></label>
+                    <input type="number" id="addQuantity" title="Quantity to Add" [(ngModel)]="quantity" name="quantity"
+                        #qtyModel="ngModel" class="form-control highlight-input" placeholder="e.g. 50" min="1" required
+                        (input)="preventNegativeQuantity($event)">
+                    <div *ngIf="qtyModel.touched && qtyModel.invalid" class="error-msg mt-2 mb-0">
+                        <span *ngIf="qtyModel.errors?.['required']">Quantity is required</span>
+                        <span *ngIf="qtyModel.errors?.['min']">Min quantity is 1</span>
+                    </div>
+                    <p class="text-xs text-muted mt-1" *ngIf="!qtyModel.invalid">Added to current stock.</p>
+                </div>
+            </div>
+
+            <div class="actions mt-4">
+                <button type="button" routerLink="/inventory" class="btn btn-secondary">Cancel</button>
+                <button type="button" (click)="submit()" [disabled]="!quantity || quantity <= 0"
+                    class="btn btn-primary btn-submit">
+                    Update
+                </button>
+            </div>
+        </div>
+
+        <div *ngIf="!product" class="error-state">
+            <p>⚠️ Product details not found.</p>
+            <button routerLink="/inventory" class="btn btn-primary mt-3">Back to Inventory</button>
+        </div>
+    </div>
+</div>

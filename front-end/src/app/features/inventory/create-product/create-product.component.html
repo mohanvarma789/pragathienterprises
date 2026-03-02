@@ -1,0 +1,71 @@
+<div class="container fade-in">
+    <div class="card glass-panel form-card">
+        <h2 class="form-title desktop-only">Add New Product</h2>
+
+        <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+            <!-- Basic Info -->
+            <div class="form-group mb-4">
+                <label>Product Name<span class="required-asterisk">*</span></label>
+                <input type="text" formControlName="name" placeholder="Enter product name">
+                <div *ngIf="productForm.get('name')?.touched && productForm.get('name')?.invalid" class="error-msg">
+                    Name is
+                    required </div>
+            </div>
+
+            <div class="form-group mb-4">
+                <label>HSN Code<span class="required-asterisk">*</span></label>
+                <input type="text" formControlName="hsn" placeholder="Enter HSN Code">
+                <div *ngIf="productForm.get('hsn')?.touched && productForm.get('hsn')?.invalid" class="error-msg"> HSN
+                    code is
+                    required </div>
+            </div>
+
+            <div class="form-group mb-4">
+                <label>Product Image</label>
+                <div class="image-upload-container">
+                    <div class="image-preview" *ngIf="imagePreview">
+                        <img [src]="imagePreview" alt="Preview">
+                        <button type="button" class="btn-remove-image" (click)="removeImage()">Remove</button>
+                    </div>
+                    <div class="upload-placeholder" *ngIf="!imagePreview">
+                        <input type="file" (change)="onFileSelected($event)" accept="image/*" id="fileInput"
+                            class="hidden-input">
+                        <label for="fileInput" class="upload-label">
+                            <span class="upload-icon">📸</span>
+                            <span>Click to Upload Image</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing & Stock -->
+            <div class="grid grid-cols-2">
+                <div class="form-group">
+                    <label>Price (₹)<span class="required-asterisk">*</span></label>
+                    <input type="number" formControlName="price" placeholder="0.00">
+                    <div *ngIf="productForm.get('price')?.touched && productForm.get('price')?.invalid"
+                        class="error-msg">
+                        <span *ngIf="productForm.get('price')?.errors?.['required']">Price is required</span>
+                        <span *ngIf="productForm.get('price')?.errors?.['min']">Min price is 0</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Initial Stock<span class="required-asterisk">*</span></label>
+                    <input type="number" formControlName="stock" placeholder="0" min="0"
+                        (input)="preventNegativeStock($event)">
+                    <div *ngIf="productForm.get('stock')?.touched && productForm.get('stock')?.invalid"
+                        class="error-msg">
+                        <span *ngIf="productForm.get('stock')?.errors?.['required']">Stock is required</span>
+                        <span *ngIf="productForm.get('stock')?.errors?.['min']">Min stock is 0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions mt-4">
+                <button type="button" (click)="resetForm()" [disabled]="productForm.pristine"
+                    class="btn btn-warning">Reset</button>
+                <button type="submit" [disabled]="productForm.invalid" class="btn btn-primary"> Save </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,102 @@
+<div class="container fade-in">
+    <div class="header-actions">
+        <div class="search-box global-header-action">
+            <span class="search-icon">🔍</span>
+            <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearch($event)"
+                placeholder="Search products...">
+        </div>
+
+        <div class="filter-group" (click)="showExportDropdown = false">
+            <select [ngModel]="selectedVillage$ | async" (ngModelChange)="onVillageFilter($event)"
+                title="Village Filter" aria-label="Village Filter" class="form-select global-header-action">
+                <option value="">-- All Villages --</option>
+                <option *ngFor="let village of villages$ | async" [value]="village">{{ village }}</option>
+            </select>
+        </div>
+
+        <div class="standard-dropdown dropdown-container">
+            <button (click)="toggleDropdown($event)" class="btn global-export-btn no-margin">
+                <span>📄 Export</span>
+                <span class="chevron" [class.open]="showExportDropdown">▼</span>
+            </button>
+            <div class="dropdown-menu glass-panel" *ngIf="showExportDropdown">
+                <button (click)="exportExcel(); toggleDropdown()" class="dropdown-item">
+                    <span class="icon">📊</span> Download as CSV
+                </button>
+                <button (click)="exportPDF(); toggleDropdown()" class="dropdown-item">
+                    <span class="icon">📄</span> Download as PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="order-grid">
+        <div *ngFor="let order of filteredOrders$ | async; let i = index" class="order-card glass-panel fade-in">
+            <div class="card-header">
+                <a [routerLink]="['/orders/invoice', order.id]" class="view-invoice-link"> 📄 View Invoice </a>
+                <span class="order-date">{{ order.date | date:'mediumDate' }}</span>
+            </div>
+
+            <div class="order-info">
+                <div class="invoice-section">
+                    <div class="invoice-left-side">
+                        <div class="invoice-no-wrap">
+                            <span class="label">Invoice No:</span>
+                            <span class="value invoice-no">{{ order.invoiceNo.replace('INV-', '').replace('NV-', '')
+                                }}</span>
+                        </div>
+                    </div>
+                    <div class="grand-total-inline-wrap">
+                        <span class="label">Grand Total:</span>
+                        <span class="grand-total-inline">₹{{ +order.totalAmount | number:'1.2-2' }}</span>
+                    </div>
+                </div>
+
+                <div class="shop-section">
+                    <span class="value shop-name">{{ order.shopName }}</span>
+                    <div class="shop-location-details">
+                        <p class="shop-address" [title]="order.shopAddress">
+                            <span class="icon">📍</span>{{ order.shopAddress }}
+                        </p>
+                        <div class="location-badges">
+                            <span class="location-item village" title="Village/Town">
+                                <span class="icon">🏘️</span> {{ order.shopVillage || 'Not Set' }} </span>
+                            <span class="location-item district" title="District">
+                                <span class="icon">🏙️</span> {{ order.shopDistrict }} </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="meta-row">
+                    <div class="meta-item">
+                        <span class="label">Products</span>
+                        <div class="value item-list">
+                            <div *ngFor="let item of (order.isExpanded ? order.itemNames : order.itemNames.slice(0, 5))"
+                                class="product-item"> • {{ item }} </div>
+                            <button *ngIf="order.itemNames.length > 5" (click)="toggleExpand(order)"
+                                class="view-more-btn">
+                                {{ order.isExpanded ? 'View Less' : '+ ' + (order.itemNames.length - 5) + ' more' }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-actions">
+                <button (click)="moveToUrgent(order)" class="btn btn-sm btn-urgent">
+                    <span>🚀 Urgent</span>
+                </button>
+                <button (click)="moveToPending(order)" class="btn btn-sm btn-pending-alt">
+                    <span>⏳ Pending</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="(filteredOrders$ | async)?.length === 0" class="empty-state card glass-panel">
+        <div class="text-center p-4">
+            <span class="large-icon">📦</span>
+            <p *ngIf="searchTerm">No completed orders found matching "{{ searchTerm }}"</p>
+            <p *ngIf="!searchTerm">No completed orders found.</p>
+        </div>
+    </div>
+</div>

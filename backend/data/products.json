@@ -1,0 +1,98 @@
+[
+    {
+        "id": "P001",
+        "name": "Tia Classic Roller 9\"",
+        "hsn": "3214",
+        "category": "Roller",
+        "type": "Standard",
+        "size": "9 inch",
+        "price": 150,
+        "stock": 500,
+        "imageUrl": "/products/roller.png"
+    },
+    {
+        "id": "P002",
+        "name": "Tia Gold Roller 9\"",
+        "hsn": "3214",
+        "category": "Roller",
+        "type": "Premium",
+        "size": "9 inch",
+        "price": 250,
+        "stock": 300,
+        "imageUrl": "/products/roller.png"
+    },
+    {
+        "id": "P003",
+        "name": "Tia Mini Roller 4\"",
+        "hsn": "3214",
+        "category": "Roller",
+        "type": "Standard",
+        "size": "4 inch",
+        "price": 60,
+        "stock": 1000,
+        "imageUrl": "/products/roller.png"
+    },
+    {
+        "id": "P004",
+        "name": "Flat Paint Brush 2\"",
+        "hsn": "9603",
+        "category": "Brush",
+        "type": "Flat",
+        "size": "2 inch",
+        "price": 45,
+        "stock": 800,
+        "imageUrl": "/products/brush.png"
+    },
+    {
+        "id": "P005",
+        "name": "Round Paint Brush 20mm",
+        "hsn": "9603",
+        "category": "Brush",
+        "type": "Round",
+        "size": "20mm",
+        "price": 35,
+        "stock": 600,
+        "imageUrl": "/products/brush.png"
+    },
+    {
+        "id": "P006",
+        "name": "Flat Paint Brush 4\"",
+        "hsn": "9603",
+        "category": "Brush",
+        "type": "Flat",
+        "size": "4 inch",
+        "price": 120,
+        "stock": 400,
+        "imageUrl": "/products/brush.png"
+    },
+    {
+        "id": "P007",
+        "name": "Tia Spray Paint (Black)",
+        "hsn": "3208",
+        "category": "Spray",
+        "type": "Standard",
+        "price": 180,
+        "stock": 200,
+        "imageUrl": "/products/spray.png"
+    },
+    {
+        "id": "P008",
+        "name": "Tia Spray Paint (Gold)",
+        "hsn": "3208",
+        "category": "Spray",
+        "type": "Premium",
+        "price": 220,
+        "stock": 150,
+        "imageUrl": "/products/spray.png"
+    },
+    {
+        "id": "P010",
+        "name": "Business Laptop",
+        "hsn": "123",
+        "category": "Electronics",
+        "type": "Standard",
+        "price": 45000,
+        "stock": 10,
+        "imageUrl": "/products/laptop.png"
+    }
+]

@@ -1,0 +1,89 @@
+<div class="container fade-in">
+    <div class="card glass-panel form-card">
+        <h2 class="text-center mb-4">Edit Shop</h2>
+
+        <form [formGroup]="shopForm" (ngSubmit)="onSubmit()">
+            <!-- Name -->
+            <div class="form-group">
+                <label>Shop Name<span class="required-asterisk">*</span></label>
+                <input type="text" formControlName="name" placeholder="Enter Shop Name"
+                    (input)="allowOnlyLetters($event)">
+                <div *ngIf="shopForm.get('name')?.touched && shopForm.get('name')?.invalid" class="error-msg">
+                    <span *ngIf="shopForm.get('name')?.errors?.['required']">Shop name is required</span>
+                    <span *ngIf="shopForm.get('name')?.errors?.['pattern']">Only letters allowed</span>
+                </div>
+            </div>
+
+            <!-- Address -->
+            <div class="form-group">
+                <label>Address<span class="required-asterisk">*</span></label>
+                <textarea formControlName="address" rows="3" placeholder="Enter Full Address"></textarea>
+                <div *ngIf="shopForm.get('address')?.touched && shopForm.get('address')?.invalid" class="error-msg">
+                    Address is
+                    required </div>
+            </div>
+
+            <!-- Location Details -->
+            <div class="grid grid-cols-2">
+                <div class="form-group">
+                    <label>District<span class="required-asterisk">*</span></label>
+                    <input type="text" formControlName="district" placeholder="Enter District"
+                        (input)="allowOnlyLetters($event)">
+                    <div *ngIf="shopForm.get('district')?.touched && shopForm.get('district')?.invalid"
+                        class="error-msg">
+                        <span *ngIf="shopForm.get('district')?.errors?.['required']">District is required</span>
+                        <span *ngIf="shopForm.get('district')?.errors?.['pattern']">Only letters allowed</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Village/Town<span class="required-asterisk">*</span></label>
+                    <input type="text" formControlName="village" placeholder="Enter Village / Town"
+                        (input)="allowOnlyLetters($event)">
+                    <div *ngIf="shopForm.get('village')?.touched && shopForm.get('village')?.invalid" class="error-msg">
+                        <span *ngIf="shopForm.get('village')?.errors?.['required']">Village/Town is required</span>
+                        <span *ngIf="shopForm.get('village')?.errors?.['pattern']">Only letters allowed</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2">
+                <div class="form-group">
+                    <label>Pincode<span class="required-asterisk">*</span></label>
+                    <input type="text" formControlName="pincode" placeholder="6-Digit Pincode" maxlength="6"
+                        (input)="allowOnlyNumbers($event)">
+                    <div *ngIf="shopForm.get('pincode')?.touched && shopForm.get('pincode')?.invalid" class="error-msg">
+                        <span *ngIf="shopForm.get('pincode')?.errors?.['required']">Pincode is required</span>
+                        <span *ngIf="shopForm.get('pincode')?.errors?.['pattern']">Must be 6 digits</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Mobile<span class="required-asterisk">*</span></label>
+                    <input type="text" formControlName="mobile" placeholder="10-Digit Mobile Number" maxlength="10"
+                        (input)="allowOnlyNumbers($event)">
+                    <div *ngIf="shopForm.get('mobile')?.touched && shopForm.get('mobile')?.invalid" class="error-msg">
+                        <span *ngIf="shopForm.get('mobile')?.errors?.['required']">Mobile is required</span>
+                        <span *ngIf="shopForm.get('mobile')?.errors?.['pattern']">Must be 10 digits</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GSTIN -->
+            <div class="form-group">
+                <label>GSTIN<span class="required-asterisk">*</span></label>
+                <input type="text" formControlName="gstin" placeholder="Ex: 22AAAAA0000A1Z5" maxlength="15"
+                    (input)="formatGSTIN($event)">
+                <div *ngIf="shopForm.get('gstin')?.touched && shopForm.get('gstin')?.invalid" class="error-msg">
+                    <span *ngIf="shopForm.get('gstin')?.errors?.['required']">GSTIN is required</span>
+                    <span *ngIf="shopForm.get('gstin')?.errors?.['pattern']">Invalid GSTIN format (e.g.
+                        22AAAAA0000A1Z5)</span>
+                </div>
+            </div>
+
+            <div class="actions mt-4">
+                <button type="button" routerLink="/shops" class="btn btn-secondary">Cancel</button>
+                <button type="submit" [disabled]="shopForm.invalid || shopForm.pristine" class="btn btn-primary"> Update
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+<svg width="350" height="90" viewBox="0 0 350 90" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Rich Gold Gradient -->
+    <linearGradient id="textGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="25%" style="stop-color:#FDB931;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#DAA520;stop-opacity:1" />
+      <stop offset="75%" style="stop-color:#B8860B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFD700;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Main Text Centered -->
+  <text x="50%" y="42" text-anchor="middle" font-family="'Times New Roman', serif" font-weight="900" font-size="34" fill="url(#textGold)" letter-spacing="1">PRAGATHI</text>
+  <!-- Subtext Centered, Same Size -->
+  <text x="50%" y="78" text-anchor="middle" font-family="'Times New Roman', serif" font-weight="900" font-size="34" fill="url(#textGold)" letter-spacing="0">ENTERPRISES</text>
+</svg>

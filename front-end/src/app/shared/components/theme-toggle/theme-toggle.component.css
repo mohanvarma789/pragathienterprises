@@ -1,0 +1,78 @@
+/* The switch - the box around the slider */
+:host {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-checkbox {
+    margin: 0;
+    /* Clear default input margins */
+    /* Hide default checkbox */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 60px;
+    height: 30px;
+    background: #e2e8f0;
+    /* Light mode background */
+    border-radius: 30px;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    transition: background 0.5s ease;
+    box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.theme-checkbox::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 4px;
+    /* Starting position for Light Mode (Sun) */
+    width: 24px;
+    height: 24px;
+    background: #f59e0b;
+    /* Sun color */
+    border-radius: 50%;
+    transition: transform 0.5s ease, background 0.5s ease, box-shadow 0.5s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+    /* Sun Icon (simple circle for now, or use background-image/mask) */
+    /* We can use a pseudo-element or background to confirm the icon if needed, 
+       but typically the color + position implies sun/moon. 
+       Let's add a simple icon using a background image or SVG encoding if we want to be fancy.
+       For now, let's stick to the color change and position which is robust. 
+    */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='5'%3E%3C/circle%3E%3Cline x1='12' y1='1' x2='12' y2='3'%3E%3C/line%3E%3Cline x1='12' y1='21' x2='12' y2='23'%3E%3C/line%3E%3Cline x1='4.22' y1='4.22' x2='5.64' y2='5.64'%3E%3C/line%3E%3Cline x1='18.36' y1='18.36' x2='19.78' y2='19.78'%3E%3C/line%3E%3Cline x1='1' y1='12' x2='3' y2='12'%3E%3C/line%3E%3Cline x1='21' y1='12' x2='23' y2='12'%3E%3C/line%3E%3Cline x1='4.22' y1='19.78' x2='5.64' y2='18.36'%3E%3C/line%3E%3Cline x1='18.36' y1='5.64' x2='19.78' y2='4.22'%3E%3C/line%3E%3C/svg%3E");
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Checked State (Dark Mode) */
+.theme-checkbox:checked {
+    background: #475569;
+    /* Dark mode track background */
+}
+
+.theme-checkbox:checked::after {
+    transform: translateX(28px);
+    /* Move to the right */
+    background-color: #f1f5f9;
+    /* Moon color (white-ish) */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    /* Glow */
+
+    /* Moon Icon */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'%3E%3C/path%3E%3C/svg%3E");
+}
+
+/* Hover effects */
+.theme-checkbox:hover::after {
+    transform: scale(1.1);
+}
+
+.theme-checkbox:checked:hover::after {
+    transform: translateX(28px) scale(1.1);
+}
