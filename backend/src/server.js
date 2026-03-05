@@ -31,24 +31,24 @@ app.use(helmet());
 
 // CORS — allow Pragathi Enterprises frontends
 const allowedOrigins = [
-    'http://localhost:4200',
-    'http://localhost:3000',
-    'http://13.234.120.26',
-    'https://13.234.120.26'
+  'http://localhost:4200',
+  'http://localhost:3000',
+  'http://13.234.120.26',
+  'https://13.234.120.26',
+  'http://pragathi-enterprises-frontend-2026.s3-website.ap-south-1.amazonaws.com'
 ];
 app.use(cors({
-    origin: function (origin, callback) {
-        // Allow requests with no origin (e.g. Postman, curl, server-to-server)
-        if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV === 'production') {
-            callback(null, true);
-        } else {
-            console.error('CORS blocked origin:', origin);
-            callback(new Error('CORS policy: Origin not allowed – ' + origin));
-        }
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.error('CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET','POST','PUT','DELETE','PATCH','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization']
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -86,7 +86,7 @@ app.get('/health', (req, res) => {
 // Global Error Handler (must be last)
 app.use(errorHandler);
 
-const server = app.listen(PORT, (err) => {
+const server = app.listen(PORT, '0.0.0.0', (err) => {
     if (err) {
         console.error('[CRITICAL] Server failed to start:', err);
         return;
