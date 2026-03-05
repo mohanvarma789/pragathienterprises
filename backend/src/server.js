@@ -82,6 +82,7 @@ app.get('/health', (req, res) => {
         version: require('../package.json').version
     });
 });
+console.log("TEST");
 
 // Global Error Handler (must be last)
 app.use(errorHandler);
